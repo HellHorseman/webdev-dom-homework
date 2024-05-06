@@ -67,6 +67,26 @@
   const commentInputElement = document.getElementById("textInput");
   const addCommentButton = document.getElementById("addComment");
 
+  // Функция для проверки заполнения полей ввода и активации/деактивации кнопки
+  function checkInputs() {
+    const name = nameInputElement.value.trim();
+    const comment = commentInputElement.value.trim();
+
+    if (name === "" || comment === "") {
+      addCommentButton.disabled = true;
+    } else {
+      addCommentButton.disabled = false;
+    }
+  }
+
+  // Вызовем функцию checkInputs() при инициализации страницы
+  checkInputs();
+
+  // Добавим обработчики событий для полей ввода
+  nameInputElement.addEventListener("input", checkInputs);
+  commentInputElement.addEventListener("input", checkInputs);
+
+  // Добавим обработчик события для кнопки "Написать"
   addCommentButton.addEventListener("click", () => {
     nameInputElement.classList.remove("error");
     commentInputElement.classList.remove("error");
@@ -85,6 +105,7 @@
       return;
     }
 
+    // Создание и добавление нового комментария
     const li = document.createElement('li');
     li.className = "comment";
 
@@ -126,10 +147,14 @@
     const commentsList = document.querySelector(".comments");
     commentsList.appendChild(li);
 
+    // Очистка полей ввода
     nameInputElement.value = "";
     commentInputElement.value = "";
 
-    console.log("New comment added!");
+    // Деактивация кнопки после добавления комментария
+    addCommentButton.disabled = true;
+
+    console.log("Новый комментарий добавлен!");
   });
 
 </script>
