@@ -65,70 +65,72 @@
 <script>
   const nameInputElement = document.getElementById("nameInput");
   const commentInputElement = document.getElementById("textInput");
-  const buttonElement = document.getElementById("addComment");
-  let currentDate = new Date();
+  const addCommentButton = document.getElementById("addComment");
 
-  buttonElement.addEventListener("click", () => {
+  addCommentButton.addEventListener("click", () => {
     nameInputElement.classList.remove("error");
     commentInputElement.classList.remove("error");
 
-    if (nameInputElement.value === "") {
+    const name = nameInputElement.value.trim();
+    const comment = commentInputElement.value.trim();
+    const currentDate = new Date();
+
+    if (name === "") {
       nameInputElement.classList.add("error");
-      
       return;
     }
 
-    if (commentInputElement.value === "") {
+    if (comment === "") {
       commentInputElement.classList.add("error");
-
       return;
     }
 
-let li = document.createElement('li');
-li.className = "comment";
+    const li = document.createElement('li');
+    li.className = "comment";
 
-let div = document.createElement('div');
-div.className = "comment-header";
-div.appendChild(document.createTextNode(nameInputElement.value));
-li.appendChild(div);
-document.body.append(li);
+    const divHeader = document.createElement('div');
+    divHeader.className = "comment-header";
 
-// const commentList = listElement.innerHTML;
-// listElement.innerHTML = commentList +
+    const divName = document.createElement('div');
+    divName.textContent = name;
+    divHeader.appendChild(divName);
 
-//     function addComment(comments, comment) {
-//   commentList.push(comment);
-//   return commentList;
-// }
+    const divDate = document.createElement('div');
+    divDate.textContent = currentDate.toLocaleString();
+    divHeader.appendChild(divDate);
 
-// let comment = { id: 8, name: 'Хэнк' };
-// addComment(comments, comment);
-    
+    const divBody = document.createElement('div');
+    divBody.className = "comment-body";
+    const divText = document.createElement('div');
+    divText.className = "comment-text";
+    divText.textContent = comment;
+    divBody.appendChild(divText);
 
-    // const oldListHtml = listElement.innerHTML;
-    // listElement.innerHTML =
-    //   oldListHtml +
-    //   `<li class="comment">
-    //     <div class="comment-header">
-    //       <div>${nameInputElement.value}</div>
-    //       <div>${currentDate}</div>
-    //     </div>
-    //     <div class="comment-body">
-    //       <div class="comment-text">
-    //         ${commentInputElement.value}
-    //       </div>
-    //     </div>
-    //     <div class="comment-footer">
-    //       <div class="likes">
-    //         <span class="likes-counter">0</span>
-    //         <button class="like-button"></button>
-    //       </div>
-    //     </div>
-    //     </li>`;
-    console.log("It works!");
+    const divFooter = document.createElement('div');
+    divFooter.className = "comment-footer";
+    const divLikes = document.createElement('div');
+    divLikes.className = "likes";
+    const spanLikesCounter = document.createElement('span');
+    spanLikesCounter.className = "likes-counter";
+    spanLikesCounter.textContent = "0";
+    const buttonLike = document.createElement('button');
+    buttonLike.className = "like-button";
+    divLikes.appendChild(spanLikesCounter);
+    divLikes.appendChild(buttonLike);
+    divFooter.appendChild(divLikes);
+
+    li.appendChild(divHeader);
+    li.appendChild(divBody);
+    li.appendChild(divFooter);
+
+    const commentsList = document.querySelector(".comments");
+    commentsList.appendChild(li);
+
+    nameInputElement.value = "";
+    commentInputElement.value = "";
+
+    console.log("New comment added!");
   });
-  "use strict";
-  // Код писать здесь
 
 </script>
 
