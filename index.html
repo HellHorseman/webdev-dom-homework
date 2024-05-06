@@ -51,6 +51,7 @@
         rows="4"></textarea>
       <div class="add-form-row">
         <button id="addComment" class="add-form-button">Написать</button>
+        <button id="deleteComment" class="add-form-button">Удалить последний комментарий</button>
       </div>
     </div>
   </div>
@@ -64,101 +65,111 @@
 
 <script>
   const nameInputElement = document.getElementById("nameInput");
-const commentInputElement = document.getElementById("textInput");
-const addCommentButton = document.getElementById("addComment");
+  const commentInputElement = document.getElementById("textInput");
+  const addCommentButton = document.getElementById("addComment");
+  const deleteCommentButton = document.getElementById("deleteComment");
 
-function checkInputs() {
-  const name = nameInputElement.value.trim();
-  const comment = commentInputElement.value.trim();
+  function checkInputs() {
+    const name = nameInputElement.value.trim();
+    const comment = commentInputElement.value.trim();
 
-  if (name === "" || comment === "") {
+    if (name === "" || comment === "") {
+      addCommentButton.disabled = true;
+    } else {
+      addCommentButton.disabled = false;
+    }
+  }
+
+  nameInputElement.addEventListener("input", checkInputs);
+  commentInputElement.addEventListener("input", checkInputs);
+
+  addCommentButton.addEventListener("click", addComment);
+
+  commentInputElement.addEventListener("keyup", function (event) {
+    if (event.key === "Enter") {
+      addComment();
+    }
+  });
+
+  deleteCommentButton.addEventListener("click", deleteLastComment);
+
+  function addComment() {
+    nameInputElement.classList.remove("error");
+    commentInputElement.classList.remove("error");
+
+    const name = nameInputElement.value.trim();
+    const comment = commentInputElement.value.trim();
+    const currentDate = new Date();
+
+    if (name === "") {
+      nameInputElement.classList.add("error");
+      return;
+    }
+
+    if (comment === "") {
+      commentInputElement.classList.add("error");
+      return;
+    }
+
+    const li = document.createElement('li');
+    li.className = "comment";
+
+    const divHeader = document.createElement('div');
+    divHeader.className = "comment-header";
+
+    const divName = document.createElement('div');
+    divName.textContent = name;
+    divHeader.appendChild(divName);
+
+    const divDate = document.createElement('div');
+    divDate.textContent = currentDate.toLocaleString();
+    divHeader.appendChild(divDate);
+
+    const divBody = document.createElement('div');
+    divBody.className = "comment-body";
+    const divText = document.createElement('div');
+    divText.className = "comment-text";
+    divText.textContent = comment;
+    divBody.appendChild(divText);
+
+    const divFooter = document.createElement('div');
+    divFooter.className = "comment-footer";
+    const divLikes = document.createElement('div');
+    divLikes.className = "likes";
+    const spanLikesCounter = document.createElement('span');
+    spanLikesCounter.className = "likes-counter";
+    spanLikesCounter.textContent = "0";
+    const buttonLike = document.createElement('button');
+    buttonLike.className = "like-button";
+    divLikes.appendChild(spanLikesCounter);
+    divLikes.appendChild(buttonLike);
+    divFooter.appendChild(divLikes);
+
+    li.appendChild(divHeader);
+    li.appendChild(divBody);
+    li.appendChild(divFooter);
+
+    const commentsList = document.querySelector(".comments");
+    commentsList.appendChild(li);
+
+    nameInputElement.value = "";
+    commentInputElement.value = "";
+
     addCommentButton.disabled = true;
-  } else {
-    addCommentButton.disabled = false;
-  }
-}
 
-nameInputElement.addEventListener("input", checkInputs);
-commentInputElement.addEventListener("input", checkInputs);
-
-addCommentButton.addEventListener("click", addComment);
-
-// Добавляем обработчик события keyup на поле ввода комментария
-commentInputElement.addEventListener("keyup", function(event) {
-  // Проверяем, была ли нажата клавиша Enter
-  if (event.key === "Enter") {
-    // Если да, то вызываем функцию добавления комментария
-    addComment();
-  }
-});
-
-function addComment() {
-  nameInputElement.classList.remove("error");
-  commentInputElement.classList.remove("error");
-
-  const name = nameInputElement.value.trim();
-  const comment = commentInputElement.value.trim();
-  const currentDate = new Date();
-
-  if (name === "") {
-    nameInputElement.classList.add("error");
-    return;
+    console.log("Новый комментарий добавлен!");
   }
 
-  if (comment === "") {
-    commentInputElement.classList.add("error");
-    return;
+  function deleteLastComment() {
+    const commentsList = document.querySelector(".comments");
+    const lastComment = commentsList.lastElementChild;
+    if (lastComment) {
+      commentsList.removeChild(lastComment);
+      console.log("Последний комментарий удален!");
+    } else {
+      console.log("Нет комментариев для удаления!");
+    }
   }
-
-  const li = document.createElement('li');
-  li.className = "comment";
-
-  const divHeader = document.createElement('div');
-  divHeader.className = "comment-header";
-
-  const divName = document.createElement('div');
-  divName.textContent = name;
-  divHeader.appendChild(divName);
-
-  const divDate = document.createElement('div');
-  divDate.textContent = currentDate.toLocaleString();
-  divHeader.appendChild(divDate);
-
-  const divBody = document.createElement('div');
-  divBody.className = "comment-body";
-  const divText = document.createElement('div');
-  divText.className = "comment-text";
-  divText.textContent = comment;
-  divBody.appendChild(divText);
-
-  const divFooter = document.createElement('div');
-  divFooter.className = "comment-footer";
-  const divLikes = document.createElement('div');
-  divLikes.className = "likes";
-  const spanLikesCounter = document.createElement('span');
-  spanLikesCounter.className = "likes-counter";
-  spanLikesCounter.textContent = "0";
-  const buttonLike = document.createElement('button');
-  buttonLike.className = "like-button";
-  divLikes.appendChild(spanLikesCounter);
-  divLikes.appendChild(buttonLike);
-  divFooter.appendChild(divLikes);
-
-  li.appendChild(divHeader);
-  li.appendChild(divBody);
-  li.appendChild(divFooter);
-
-  const commentsList = document.querySelector(".comments");
-  commentsList.appendChild(li);
-
-  nameInputElement.value = "";
-  commentInputElement.value = "";
-
-  addCommentButton.disabled = true;
-
-  console.log("Новый комментарий добавлен!");
-}
-
 
 </script>
 
